@@ -14,7 +14,7 @@ var PropertyDefiner = PropertyDefiner || {};
 
 		for(var index=0; index<keys.length; ++index){
 			key = keys[index];
-			settings[ key ] = prop[key];
+			settings[ key ] = get_setting(key, prop[key]);
 		}
 
 		Object.defineProperties(obj, settings);
@@ -48,10 +48,10 @@ var PropertyDefiner = PropertyDefiner || {};
 		}
 
 		if (hasProperty(prop, "get")){
-			setting.get = get_getter(prop.get);
+			setting.get = get_getter(key, prop.get);
 		}
 		if (hasProperty(prop, "set")){
-			setting.set = get_setter(prop.set);
+			setting.set = get_setter(key, prop.set);
 		}
 
 		// ディスクリプタ競合チェック
@@ -62,14 +62,14 @@ var PropertyDefiner = PropertyDefiner || {};
 		return setting;
 	}
 
-	function get_getter (get) {
+	function get_getter (key, get) {
 		if (!isCallable(get) && get !== "undefined"){
 			throw new TypeError("bad get");
 		}
 		return get;
 	}
 
-	function get_setter (set) {
+	function get_setter (key, set) {
 		if (!isCallable(set) && set !== "undefined"){
 			throw new TypeError("bad set");
 		}
